@@ -47,7 +47,7 @@ import static org.apache.curator.framework.recipes.cache.CuratorCacheListener.Ty
 import static org.apache.zookeeper.KeeperException.Code.NONODE;
 import static org.apache.zookeeper.KeeperException.Code.OK;
 
-class CuratorCacheImpl implements CuratorCache
+class CuratorCacheImpl implements CuratorCache, CuratorCacheBridge
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final AtomicReference<State> state = new AtomicReference<>(State.LATENT);
@@ -134,6 +134,12 @@ class CuratorCacheImpl implements CuratorCache
     public Stream<ChildData> streamImmediateChildren(String fromParent)
     {
         return storage.streamImmediateChildren(fromParent);
+    }
+
+    @Override
+    public Stream<ChildData> streamRootChildren()
+    {
+        return storage.streamImmediateChildren(path);
     }
 
     @VisibleForTesting
